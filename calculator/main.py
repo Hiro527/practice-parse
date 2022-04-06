@@ -1,7 +1,8 @@
 from collections import deque
 import re
 
-regexAll = re.compile('(?:\d+\.?\d*|\.\d+)|[\(\)\*/\^]|[\+\-]|[\(\)]')
+regexAll = re.compile(
+    '(?:\d+\.?\d*|\.\d+)|[\(\)\*/\^]|[\+\-]|[\(\)]')  # すべてのトークンのパターン
 regexNumber = re.compile('(?:\d+\.?\d*|\.\d+)')  # 値
 regexSymbol = re.compile('[\+\-\*/\^]')  # 演算記号
 regexBracket = re.compile('[\(\)]')  # カッコ
@@ -31,14 +32,16 @@ connectDirection = {
 formula = regexSpace.sub('', input())
 
 
-def getType(v):
+# 与えられた文字列の属性を返す
+def getType(v: str):
     if (regexNumber.match(v)):
-        return 'Number'   # 値
+        return 'Number'
     if (regexSymbol.match(v)):
-        return 'Symbol'  # 演算記号
+        return 'Symbol'
     return 'Unknown'
 
 
+# 数式→トークン配列の変換
 def tokenize(formula: str) -> list[str]:
     token = regexAll.match(formula).group()
     formula = formula[len(token):]
@@ -47,9 +50,10 @@ def tokenize(formula: str) -> list[str]:
     return [token]
 
 
+# トークン配列→RPN配列
 def makeRpn(tokens: list[str]) -> list[str]:
-    symbols = deque()  # スタック
-    outputs = []      # 出力キュー
+    symbols = deque()  # 記号のスタック
+    outputs = []       # 出力キュー
     for token in tokens:
         # 値の場合は出力キューへ追加
         if getType(token) == 'Number':
@@ -67,6 +71,7 @@ def makeRpn(tokens: list[str]) -> list[str]:
                         break
             symbols.append(token)
             continue
+        # カッコの処理
         if token == '(':
             symbols.append(token)
             continue
@@ -78,6 +83,7 @@ def makeRpn(tokens: list[str]) -> list[str]:
                 else:
                     outputs.append(symbols.pop())
             continue
+    # 最後まで残った記号たちを出力キューへ追加
     if len(symbols):
         for symbol in reversed(symbols):
             outputs.append(symbol)
@@ -85,14 +91,18 @@ def makeRpn(tokens: list[str]) -> list[str]:
 
 
 def runRpn(formula: list[str]):
+    # 値のスタック
     values = deque()
     for token in formula:
         match getType(token):
             case 'Number':
+                # 値ならそのままスタック
                 values.append(float(token))
             case 'Symbol':
+                # 最新の2つの値
                 value1 = values.pop()
                 value2 = values.pop()
+                # 演算してスタック
                 match token:
                     case '+':
                         values.append(value2 + value1)
@@ -111,9 +121,17 @@ def runRpn(formula: list[str]):
 
 
 def calc(formula):
+    # 数式をトークンにして
     tokenizedFormula = tokenize(formula)
+    # RPNにして
     rpn = makeRpn(tokenizedFormula)
+    # RPNを計算する
     return runRpn(rpn)
 
 
 print(calc(formula))
+
+
+"""
+参考: https://ja.wikipedia.org/wiki/操車場アルゴリズム
+"""
