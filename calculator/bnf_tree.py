@@ -34,13 +34,13 @@ def tokenize(f: str) -> list[str]:
 # 式
 def expr(t: list[str]):
     global index, nest
-    print('\033[32m{0}<expr>: {1}\033[0m'.format(' ' * nest, ''.join(t[index:])))
+    print('\033[32m{0}<expr>: {1}\033[0m'.format(' ' * 4 * nest, ''.join(t[index:])))
     nest += 1
     v = term(t)
     while index < len(t) and (t[index] == '+' or t[index] == '-'):
         operator = t[index]
         index += 1
-        print('\033[35m{0}<operator>: {1}\033[0m'.format(' ' * nest, operator))
+        print('\033[35m{0}<operator>: {1}\033[0m'.format(' ' * 4 * nest, operator))
         match operator:
             case '+':
                 v += term(t)
@@ -53,13 +53,13 @@ def expr(t: list[str]):
 # 項
 def term(t: list[str]):
     global index, nest
-    print('\033[34m{0}<term>: {1}\033[0m'.format(' ' * nest, ''.join(t[index:])))
+    print('\033[34m{0}<term>: {1}\033[0m'.format(' ' * 4 * nest, ''.join(t[index:])))
     nest += 1
     v = factor(t)
     while index < len(t) and (t[index] == '*' or t[index] == '/'):
         operator = t[index]
         index += 1
-        print('\033[35m{0}<operator>: {1}\033[0m'.format(' ' * nest, operator))
+        print('\033[35m{0}<operator>: {1}\033[0m'.format(' ' * 4 * nest, operator))
         match operator:
             case '*':
                 v *= factor(t)
@@ -72,7 +72,7 @@ def term(t: list[str]):
 # 因子
 def factor(t: list[str]):
     global index, nest
-    print('\033[33m{0}<factor>: {1}\033[0m'.format(' ' * nest, ''.join(t[index:])))
+    print('\033[33m{0}<factor>: {1}\033[0m'.format(' ' * 4 * nest, ''.join(t[index:])))
     nest += 1
     v = None
     if t[index] == '(':
@@ -91,7 +91,7 @@ def factor(t: list[str]):
 # 数
 def number(t: list[str]):
     global index, nest
-    print('\033[31m{0}<number>: {1}\033[0m'.format(' ' * nest, t[index]))
+    print('\033[31m{0}<number>: {1}\033[0m'.format(' ' * 4 * nest, t[index]))
     nest += 1
     v = None
     if isFloatRegex.match(t[index]):
