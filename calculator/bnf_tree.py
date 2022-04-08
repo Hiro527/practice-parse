@@ -34,7 +34,7 @@ def tokenize(f: str) -> list[str]:
 # 式
 def expr(t: list[str]):
     global index, nest
-    print('\033[32m{0}<expr> {1}\033[0m'.format(' ' * nest, ''.join(t[index:])))
+    print('\033[32m{0}<expr>: {1}\033[0m'.format(' ' * nest, ''.join(t[index:])))
     nest += 1
     v = term(t)
     while index < len(t) and (t[index] == '+' or t[index] == '-'):
