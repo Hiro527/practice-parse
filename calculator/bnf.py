@@ -88,6 +88,9 @@ def number(t: list[str]):
     return v
 
 
-
 if __name__ == '__main__':
     print(eval())
+
+"""
+参考: https://qiita.com/thtitech/items/91e2456c989ca969850d
+"""
